@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import android.widget.GridLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                     setBackgroundResource(R.drawable.tic_tac_toe_button)
                     setTextColor(Color.WHITE)
                     setOnClickListener {
-                        // todo: do player move
+                        takeTurn(row, column)
                     }
                 }
             }
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                     height = 0
                     rowSpec = GridLayout.spec(row, 1f)
                     columnSpec = GridLayout.spec(column, 1f)
-                    setMargins(16,16,16,16)
+                    setMargins(16, 16, 16, 16)
                 }
 
                 button.layoutParams = params
@@ -75,6 +76,26 @@ class MainActivity : AppCompatActivity() {
             for (column in board[row].indices) {
                 buttons[row][column].text = board[row][column].toString()
                 buttons[row][column].isEnabled = board[row][column] == EMPTY
+            }
+        }
+    }
+
+    private fun takeTurn(row: Int, col: Int) {
+        if (game.validate(row, col)) {
+            game.takeTurn(row, col)
+            drawBoard()
+
+            val winner = game.getWinner()
+
+            if (winner != null) {
+                val message = when (winner) {
+                    EndGameOption.PLAYER_X -> "X Win the game"
+                    EndGameOption.PLAYER_0 -> "0 Win the game"
+                    EndGameOption.DRAW_INDICATOR -> "Draw :("
+                }
+
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                game.resetBoard()
             }
         }
     }
