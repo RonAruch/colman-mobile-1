@@ -66,5 +66,4 @@ class Game {
             EndGameOption.PLAYER_0
         }
     }
-
 }
